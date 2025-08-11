@@ -1,0 +1,55 @@
+{
+  "info": {
+    "name": "TurfEase",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "e7a5a6f1-8a1f-4c3b-a9c7-000000000001"
+  },
+  "item": [
+    {
+      "name": "Auth - Signup User",
+      "request": {"method": "POST", "header": [{"key":"Content-Type","value":"application/json"}], "url": "{{baseUrl}}/api/auth/user/signup", "body": {"mode": "raw", "raw": "{\n  \"fullName\": \"User\",\n  \"email\": \"user@turfease.com\",\n  \"password\": \"User@1234\"\n}"}}
+    },
+    {
+      "name": "Auth - Signup Admin",
+      "request": {"method": "POST", "header": [{"key":"Content-Type","value":"application/json"}], "url": "{{baseUrl}}/api/auth/admin/signup", "body": {"mode": "raw", "raw": "{\n  \"fullName\": \"Admin\",\n  \"email\": \"admin@turfease.com\",\n  \"password\": \"Admin@1234\"\n}"}}
+    },
+    {
+      "name": "Auth - Login",
+      "request": {"method": "POST", "header": [{"key":"Content-Type","value":"application/json"}], "url": "{{baseUrl}}/api/auth/login", "body": {"mode": "raw", "raw": "{\n  \"email\": \"user@turfease.com\",\n  \"password\": \"User@1234\"\n}"}},
+      "event": [{"listen":"test","script":{"exec":["var data = pm.response.json();","pm.collectionVariables.set('token', data.token);","pm.collectionVariables.set('userEmail', data.email);"]}}]
+    },
+    {
+      "name": "Auth - Me",
+      "request": {"method": "GET", "header": [{"key":"Authorization","value":"Bearer {{token}}"}], "url": "{{baseUrl}}/api/auth/me"}
+    },
+    {
+      "name": "Turfs - Public List",
+      "request": {"method": "GET", "url": "{{baseUrl}}/api/turfs/public"}
+    },
+    {
+      "name": "Turfs - Create (Admin)",
+      "request": {"method": "POST", "header": [{"key":"Content-Type","value":"application/json"},{"key":"Authorization","value":"Bearer {{token}}"}], "url": "{{baseUrl}}/api/turfs", "body": {"mode": "raw", "raw": "{\n  \"name\": \"Test Turf\",\n  \"location\": \"Downtown\",\n  \"pricePerHour\": 50,\n  \"sportType\": \"FOOTBALL\",\n  \"images\": \"https://picsum.photos/seed/t/800/400\",\n  \"description\": \"Great turf\"\n}"}}
+    },
+    {
+      "name": "Bookings - Create",
+      "request": {"method": "POST", "header": [{"key":"Content-Type","value":"application/json"},{"key":"Authorization","value":"Bearer {{token}}"}], "url": "{{baseUrl}}/api/bookings", "body": {"mode": "raw", "raw": "{\n  \"turfId\": 1,\n  \"startTime\": \"2030-01-01T10:00:00\",\n  \"endTime\": \"2030-01-01T11:00:00\",\n  \"totalAmount\": 50,\n  \"userEmail\": \"{{userEmail}}\"\n}"}}
+    },
+    {
+      "name": "Bookings - My List",
+      "request": {"method": "GET", "header": [{"key":"Authorization","value":"Bearer {{token}}"}], "url": "{{baseUrl}}/api/bookings"}
+    },
+    {
+      "name": "Payment - Initiate",
+      "request": {"method": "POST", "header": [{"key":"Authorization","value":"Bearer {{token}}"}], "url": "{{baseUrl}}/api/payments/initiate/1"}
+    },
+    {
+      "name": "Notifications - Email",
+      "request": {"method": "POST", "header": [{"key":"Content-Type","value":"application/json"}], "url": "{{baseUrl}}/api/notifications/email", "body": {"mode": "raw", "raw": "{\n  \"to\": \"user@turfease.com\",\n  \"subject\": \"Hello\",\n  \"body\": \"Message\"\n}"}}
+    }
+  ],
+  "variable": [
+    {"key": "baseUrl", "value": "http://localhost:8080"},
+    {"key": "token", "value": ""},
+    {"key": "userEmail", "value": "user@turfease.com"}
+  ]
+}

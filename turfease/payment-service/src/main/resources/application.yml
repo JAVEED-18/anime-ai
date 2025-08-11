@@ -1,0 +1,18 @@
+server:
+  port: 9004
+spring:
+  application:
+    name: payment-service
+jwt:
+  secret: ${JWT_SECRET:ThisIsADevOnlySecret_ChangeMe}
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
