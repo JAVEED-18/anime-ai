@@ -1,0 +1,3 @@
+:root{--accent:#1e7e34}
+.hero{background:linear-gradient(135deg,var(--accent),#20c997);color:white;padding:40px;border-radius:12px}
+.card-img-top{object-fit:cover;height:180px}
