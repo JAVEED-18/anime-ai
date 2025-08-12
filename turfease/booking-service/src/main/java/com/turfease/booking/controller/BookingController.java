@@ -10,7 +10,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -52,7 +51,7 @@ public class BookingController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> cancel(@PathVariable Long id, Authentication auth) {
         return repo.findById(id).map(b -> {
-            if (!hasAccess(auth, b)) return ResponseEntity.status(403).build();
+            if (!hasAccess(auth, b)) return ResponseEntity.status(403).body("Forbidden");
             b.setStatus(BookingStatus.CANCELLED);
             repo.save(b);
             return ResponseEntity.noContent().build();
@@ -63,7 +62,7 @@ public class BookingController {
     public ResponseEntity<?> markPaid(@PathVariable Long id, @RequestHeader(value = "X-Internal-Token", required = false) String token,
                                       @RequestHeader(value = "X-Payment-Ref", required = false) String paymentRef) {
         String expected = System.getenv().getOrDefault("INTERNAL_SERVICE_TOKEN", "dev-internal-token");
-        if (token == null || !token.equals(expected)) return ResponseEntity.status(401).build();
+        if (token == null || !token.equals(expected)) return ResponseEntity.status(401).body("Unauthorized internal call");
         return repo.findById(id).map(b -> {
             b.setStatus(BookingStatus.PAID);
             repo.save(b);
@@ -71,10 +70,12 @@ public class BookingController {
         }).orElse(ResponseEntity.notFound().build());
     }
 
-    private Long extractUserId(String emailOrName) {
-        // In this simplified approach, the auth name is the email; a real implementation would embed userId in token
-        // For demo, hash email to a stable positive long
-        return Math.abs(emailOrName.hashCode()) + 0L;
+    private Long extractUserId(String authName) {
+        try {
+            return Long.parseLong(authName);
+        } catch (NumberFormatException e) {
+            return Math.abs(authName.hashCode()) + 0L;
+        }
     }
 
     private boolean hasAccess(Authentication auth, Booking b) {

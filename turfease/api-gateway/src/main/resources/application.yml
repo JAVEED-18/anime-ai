@@ -10,7 +10,7 @@ spring:
       globalcors:
         corsConfigurations:
           '[/**]':
-            allowedOrigins: "http://localhost:3000"
+            allowedOrigins: "http://localhost:3000,http://localhost:8080"
             allowedMethods: "GET,POST,PUT,DELETE,OPTIONS"
             allowedHeaders: "*"
             allowCredentials: true
@@ -35,11 +35,10 @@ spring:
           uri: lb://payment-service
           predicates:
             - Path=/api/payments/**
-        - id: notification-service
-          uri: lb://notification-service
+        - id: email-service-for-booking
+          uri: lb://email-service-for-booking
           predicates:
             - Path=/api/notifications/**
-    
   main:
     web-application-type: reactive
 

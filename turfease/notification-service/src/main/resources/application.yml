@@ -1,19 +1,21 @@
-server:
-  port: 9005
 spring:
   application:
-    name: notification-service
+    name: email-service-for-booking
   mail:
-    host: ${MAIL_HOST:}
-    port: ${MAIL_PORT:}
-    username: ${MAIL_USERNAME:}
-    password: ${MAIL_PASSWORD:}
+    host: smtp.gmail.com
+    port: 587
+    username: turfease.dev@gmail.com
+    password: pelzlxrxyhtbvigp
     properties:
       mail:
         smtp:
           auth: true
           starttls:
             enable: true
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+server:
+  port: 8081
 
 eureka:
   client:

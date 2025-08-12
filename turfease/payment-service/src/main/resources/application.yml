@@ -1,8 +1,15 @@
-server:
-  port: 9004
 spring:
   application:
-    name: payment-service
+    name: Payment-service
+server:
+  port: 8090
+razorpay:
+  key_id: ${RAZORPAY_KEY_ID:rzp_test_u6TGiMYNuc63rC}
+  key_secret: ${RAZORPAY_KEY_SECRET:Qoj1PpNNyLyzhtNp6JE7S8x8}
+customer:
+  service:
+    confirm-url: ${CUSTOMER_SERVICE_CONFIRM_URL:http://localhost:9001/api/customer/confirm}
+
 jwt:
   secret: ${JWT_SECRET:ThisIsADevOnlySecret_ChangeMe}
 

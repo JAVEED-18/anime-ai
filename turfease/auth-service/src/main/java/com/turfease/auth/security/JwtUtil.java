@@ -28,9 +28,10 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String generateToken(String username, String role) {
+    public String generateToken(String username, String role, Long userId) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", role);
+        claims.put("uid", userId);
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(username)
@@ -47,6 +48,14 @@ public class JwtUtil {
     public String getRoleFromToken(String token) {
         Object role = getAllClaimsFromToken(token).get("role");
         return role == null ? null : role.toString();
+    }
+
+    public Long getUserIdFromToken(String token) {
+        Object uid = getAllClaimsFromToken(token).get("uid");
+        if (uid == null) return null;
+        if (uid instanceof Integer) return ((Integer) uid).longValue();
+        if (uid instanceof Long) return (Long) uid;
+        return Long.parseLong(uid.toString());
     }
 
     public boolean validateToken(String token, UserDetails userDetails) {

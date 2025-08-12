@@ -49,7 +49,7 @@ public class AuthController {
         user.setFullName(request.fullName);
         user.setRole(role);
         userRepository.save(user);
-        String token = jwtUtil.generateToken(user.getEmail(), user.getRole().name());
+        String token = jwtUtil.generateToken(user.getEmail(), user.getRole().name(), user.getId());
         return ResponseEntity.ok(new AuthDtos.JwtResponse(token, user.getRole().name(), user.getEmail(), user.getId()));
     }
 
@@ -57,7 +57,7 @@ public class AuthController {
     public ResponseEntity<?> login(@Valid @RequestBody AuthDtos.LoginRequest request) {
         Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email, request.password));
         User user = userRepository.findByEmail(request.email).orElseThrow();
-        String token = jwtUtil.generateToken(user.getEmail(), user.getRole().name());
+        String token = jwtUtil.generateToken(user.getEmail(), user.getRole().name(), user.getId());
         return ResponseEntity.ok(new AuthDtos.JwtResponse(token, user.getRole().name(), user.getEmail(), user.getId()));
     }
 
